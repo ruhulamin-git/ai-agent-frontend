@@ -1,0 +1,94 @@
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+
+import { axios, toCamelCase } from "@/utils";
+import { handleApiError } from "@/utils/handleApiError";
+
+import type { CommentListResponse } from "./types";
+import type { FilterType, URLParams } from "@/types";
+import type { QueryConfig } from "@/utils/reactQuery";
+import type { PaginationState, SortingState } from "@tanstack/react-table";
+
+const GET_COMMENTS_URL = (
+  agentId: string,
+  params?: URLParams,
+  filters?: FilterType,
+  sorting?: SortingState
+): string => {
+  let baseUrl = `/api/marketplace/v1/agents/${agentId}/comments/`;
+  const query: string[] = [];
+
+  if (params?.page) query.push(`page=${params.page}`);
+  if (params?.pageSize) query.push(`page_size=${params.pageSize}`);
+
+  if (sorting && sorting.length > 0) {
+    const sortField = sorting[0].id;
+    const sortDirection = sorting[0].desc ? "-" : "";
+    query.push(`ordering=${sortDirection}${sortField}`);
+  }
+
+  if (filters && filters.length > 0) {
+    filters.forEach((filter) => {
+      query.push(`${filter.id}=${filter.value}`);
+    });
+  }
+
+  if (query.length > 0) {
+    baseUrl += `?${query.join("&")}`;
+  }
+
+  return baseUrl;
+};
+
+export const getComments = async (
+  agentId: string,
+  pagination?: PaginationState,
+  filters?: FilterType,
+  sorting?: SortingState
+): Promise<CommentListResponse | null> => {
+  try {
+    const params: URLParams | undefined = pagination
+      ? { page: pagination.pageIndex + 1, pageSize: pagination.pageSize }
+      : undefined;
+
+    const url = GET_COMMENTS_URL(agentId, params, filters, sorting);
+    const response = await axios.get<unknown, unknown>(url);
+    const camelCasedData = toCamelCase(response) as CommentListResponse & {
+      pagination: { numPages?: number; totalPages?: number };
+    };
+
+    if (camelCasedData?.pagination?.numPages !== undefined) {
+      camelCasedData.pagination.totalPages = camelCasedData.pagination.numPages;
+    }
+
+    return camelCasedData as CommentListResponse;
+  } catch (error) {
+    handleApiError(error);
+    return Promise.reject(error);
+  }
+};
+
+interface UseCommentsListOptions {
+  agentId: string;
+  pagination?: PaginationState;
+  filters?: FilterType;
+  sorting?: SortingState;
+  enabled?: boolean;
+  config?: QueryConfig<typeof getComments>;
+}
+
+export const useCommentsList = ({
+  agentId,
+  pagination,
+  filters,
+  sorting,
+  enabled = true,
+  config,
+}: UseCommentsListOptions) => {
+  return useQuery({
+    queryKey: ["agent-comments", agentId, pagination, filters, sorting],
+    queryFn: () => getComments(agentId, pagination, filters, sorting),
+    placeholderData: keepPreviousData,
+    enabled: enabled && !!agentId,
+    ...config,
+  });
+};

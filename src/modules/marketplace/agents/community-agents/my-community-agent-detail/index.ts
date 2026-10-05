@@ -1,0 +1,1 @@
+export { MyCommunityAgentDetails } from "./components";

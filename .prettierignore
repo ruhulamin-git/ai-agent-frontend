@@ -1,0 +1,147 @@
+# Prettier Ignore File for Mid-Scale Modular Application
+# Files and directories that should not be formatted by Prettier
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+.vercel/
+.netlify/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.nx/cache/
+.nx/workspace-data/
+.turbo/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional caches
+.npm
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Package manager lock files (don't format these)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated files
+*.generated.*
+*.gen.*
+
+# Test coverage
+coverage/
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# MSW
+public/mockServiceWorker.js
+
+# Auto-generated files
+*.d.ts.map
+*.js.map
+*.css.map
+
+# Husky
+.husky/_/
+
+# Git
+.git/
+.gitignore
+
+# Ignore specific file types that shouldn't be formatted
+*.min.js
+*.min.css
+*.bundle.js
+*.chunk.js
+
+# Ignore vendor/third-party files
+vendor/
+third-party/
+external/
+
+# Ignore generated API files
+**/generated/
+**/*.generated.ts
+**/*.generated.js
+
+# Ignore migration files (database)
+**/migrations/
+**/*.migration.*
+
+# Ignore fixture/mock data files
+**/fixtures/
+**/mocks/
+**/__fixtures__/
+**/__mocks__/
+
+# Ignore compiled assets
+public/static/
+static/assets/
+
+# Ignore internationalization compiled files
+**/locales/**/*.json
+
+# Ignore specific config files that have special formatting
+.browserslistrc
+.nvmrc
+.tool-versions
+
+# Ignore binary files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.pdf
+*.zip
+*.tar.gz
+*.woff
+*.woff2
+*.ttf
+*.eot
+
+# Ignore changelog and license files
+CHANGELOG.md
+CHANGELOG.txt
+LICENSE
+LICENSE.md
+LICENSE.txt
